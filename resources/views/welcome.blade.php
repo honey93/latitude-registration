@@ -145,6 +145,7 @@
                       <input type="password" class="form-control" id="pwd" ng-model="admin.password">
                     </div>
                   </div>
+                  <p> Note: Password is : latitude </p>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="admin_submission()">Submit</button>
                   </div>
