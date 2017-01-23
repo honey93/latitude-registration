@@ -25,3 +25,14 @@ Route::post('submit-form',function(Request $request){
 	return $id;
 
 });
+
+Route::get('data-analytics',function(){
+
+
+	$results = DB::table('registration')->get();
+	
+	Log::info($results);
+
+	return $results;
+
+});
