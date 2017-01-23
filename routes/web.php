@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,4 +14,14 @@
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::post('submit-form',function(Request $request){
+
+	$data = $request->all();
+
+	$id = DB::table('registration')->insertGetID($data['registration']);
+
+	return $id;
+
 });
