@@ -95,7 +95,7 @@
 
             <div class="row heading">
                 <div class="col-md-2"> <div> <img src="logo.png" width="100%"> </div>  </div>
-                <div class="col-md-2 col-md-offset-8"> <button type="button" data-toggle="modal" data-target="#admin" class="btn btn-default admin">Admin Login</button> </div>
+                <div class="col-md-2 col-md-offset-8"> <button type="button" data-toggle="modal" data-target="#admin" class="btn btn-default admin" ng-show="!adminFlag">Admin Login</button>  <button type="button" class="btn btn-default admin" ng-show="adminFlag" ng-click="adminOut()">Logout</button></div>
             </div>
 
             <div ui-view>  </div>
@@ -194,7 +194,16 @@
 
 
 
-                app.controller('myCtrl', function($scope,$http,$state) {
+                app.service('myService',function(){
+
+                    this.adminflag = false;
+
+                });    
+
+
+                app.controller('myCtrl', function($scope,$http,$state,myService) {
+
+                    $scope.adminFlag = false;
 
                     $scope.preview = false;
                     
@@ -246,6 +255,9 @@
                         if($scope.admin.password == "latitude"){
 
                             console.log($scope.admin);
+
+
+                            $scope.adminFlag = true;
                             
                             $state.go('analytics');
                             $scope.get_analytics_data();
@@ -255,6 +267,15 @@
 
                             alert("Invalid Credentials")
                         }
+
+                    }
+
+                    $scope.adminOut = function(){
+
+                        $scope.adminFlag = false;
+
+                        $state.go('home');
+
 
                     }
 
