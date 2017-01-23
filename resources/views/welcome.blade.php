@@ -89,7 +89,7 @@
         <div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
             <div class="row heading">
                 <div class="col-md-2"> <div> <img src="logo.png" width="100%"> </div>  </div>
-                <div class="col-md-2 col-md-offset-8"> <button type="button" class="btn btn-default admin">Admin Login</button> </div>
+                <div class="col-md-2 col-md-offset-8"> <button type="button" data-toggle="modal" data-target="#admin" class="btn btn-default admin">Admin Login</button> </div>
             </div>
 
             <div class="row form-background">
@@ -169,7 +169,8 @@
 
                                  <div class="col-md-4 col-md-offset-8">
 
-                                    <button type="button" class="btn btn-default admin" ng-click="showData()">Preview</button>
+                                    <button type="button" class="btn btn-default admin" ng-show="preview" ng-click="editData()">Edit</button>
+                                    <button type="button" class="btn btn-default admin" ng-show="!preview" ng-click="showData()">Preview</button>
                                     <button type="button" class="btn btn-default admin" ng-disabled="!preview" ng-click="submit_form()" data-toggle="modal" data-target="#myModal">Submit</button> 
 
 
@@ -214,6 +215,35 @@
             </div>
 
 
+            <div id="admin" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Enter your Admin Credentials</h4>
+                  </div>
+                  <div class="modal-body">
+                    
+                    <div class="form-group">
+                      <label for="usr">Name:</label>
+                      <input type="text" class="form-control" id="usr" ng-model="admin.name">
+                    </div>
+                    <div class="form-group">
+                      <label for="pwd">Password:</label>
+                      <input type="password" class="form-control" id="pwd" ng-model="admin.password">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="admin_submission()">Submit</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
         </div>
 
 
@@ -239,6 +269,8 @@
 
                     $scope.reg_id = "";
 
+                    $scope.admin = {name:"",password:""};
+
                     
 
                     $scope.showData = function(){
@@ -246,6 +278,11 @@
 
                         $scope.preview = true;
 
+                    }
+
+                    $scope.editData = function(){
+
+                        $scope.preview = false;
                     }
 
                     $scope.submit_form = function(){
@@ -269,6 +306,21 @@
                                 $scope.data = {name:"",mobile:"",email:"",id_url:"",reg_type:"",no_tickets:"",reg_date:""};
 
                         });
+                    }
+
+                    $scope.admin_submission = function(){
+
+                        if($scope.admin.password == "latitude"){
+
+                            console.log($scope.admin);
+                            
+                        }
+
+                        else{
+
+                            alert("Invalid Credentials")
+                        }
+
                     }
 
         
