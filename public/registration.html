@@ -42,7 +42,8 @@
                              
                                  <div class="col-md-3">
                                     <div class="form-group">
-                                        <input type="file" class="form-control" ng-model="data.id_url"  placeholder="jpeg or png" ng-disabled="preview"> 
+                                    <input class="form-control" type="file" file />
+                                    <img ng-show="preview" ng-src="[[data.id_url]]" width="100%" height="100%">
                                     </div>
                                  </div>
 

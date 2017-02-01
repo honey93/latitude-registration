@@ -15,6 +15,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"> </script>
         <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+         <script src="js/aws-sdk-js/dist/aws-sdk.min.js"></script>
 
         <!-- Styles -->
         <style>
@@ -164,7 +165,28 @@
 
 
         <script>
-                            var app = angular.module('myApp', ['ui.router']);
+                            var app = angular.module('myApp', ['ui.router',]);
+
+                            
+
+                           app.directive('file', function() {
+                              return {
+                                restrict: 'AE',
+                               
+                                link: function($scope, el, attrs){
+                                  el.bind('change', function(event){
+                                    var files = event.target.files;
+                                    var file = files[0];
+                                    $scope.file = file;
+                                    $scope.$parent.file = file;
+                                    $scope.$apply();
+                                  });
+                                }
+                              };
+                            });
+
+
+
 
                     app.config(function($interpolateProvider,$stateProvider,$urlRouterProvider){
 
@@ -203,6 +225,19 @@
 
                 app.controller('myCtrl', function($scope,$http,$state,myService) {
 
+
+
+                                        $scope.creds = {
+                      bucket: 'thakuria',
+                      access_key: 'AKIAJYPR4T7IVPWLAVRQ',
+                      secret_key: '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'
+                    }
+                     
+                    $scope.upload = function() {
+                      // Configure The S3 Object 
+                      
+                    }
+
                     $scope.adminFlag = false;
 
                     $scope.preview = false;
@@ -220,14 +255,56 @@
 
                         $scope.preview = true;
 
+
+
+                        AWS.config.update({ accessKeyId: $scope.creds.access_key, secretAccessKey: $scope.creds.secret_key });
+                      AWS.config.region = 'us-east-1';
+                      var bucket = new AWS.S3({ params: { Bucket: $scope.creds.bucket } });
+                     
+                      if($scope.file) {
+                        var params = { Key: $scope.file.name, ContentType: $scope.file.type, Body: $scope.file, ServerSideEncryption: 'AES256' };
+                     
+                        bucket.putObject(params, function(err, data) {
+                          if(err) {
+                            // There Was An Error With Your S3 Config
+                            alert(err.message);
+                            return false;
+                          }
+                          else {
+                            // Success!
+                            //alert('Upload Done');
+                        $scope.data.id_url = 'https://s3-us-west-2.amazonaws.com/thakuria/' + $scope.file.name;
+                            $scope.$digest();
+                          }
+                        })
+                        .on('httpUploadProgress',function(progress) {
+                              // Log Progress Information
+                              console.log(Math.round(progress.loaded / progress.total * 100) + '% done');
+                            });
+                      }
+                      else {
+                        // No File Selected
+                        alert('No File Selected');
+                      }
+
+
+
                     }
 
                     $scope.editData = function(){
 
                         $scope.preview = false;
+
+
+
                     }
 
                     $scope.submit_form = function(){
+
+                       // alert($scope.file.name);
+
+                        
+
 
                         console.log(JSON.stringify($scope.data));
 
