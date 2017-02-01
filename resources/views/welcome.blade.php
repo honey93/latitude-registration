@@ -226,6 +226,9 @@
                 app.controller('myCtrl', function($scope,$http,$state,myService) {
 
 
+                    $scope.loading = false;
+
+
 
                                         $scope.creds = {
                       bucket: 'thakuria',
@@ -252,6 +255,8 @@
 
                     $scope.showData = function(){
 
+                        $scope.loading = true;
+
 
                         $scope.preview = true;
 
@@ -273,6 +278,7 @@
                           else {
                             // Success!
                             //alert('Upload Done');
+                            $scope.loading = false;
                         $scope.data.id_url = 'https://s3-us-west-2.amazonaws.com/thakuria/' + $scope.file.name;
                             $scope.$digest();
                           }
