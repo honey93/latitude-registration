@@ -359,14 +359,8 @@
                               //  console.log(JSON.stringify(data.token));
                                 console.log(JSON.stringify(data));
                               //  alert(data.token);
-                                return $http.get('api/authenticate/user');
-
-                                // If login is successful, redirect to the users state
-                                //$state.go('users', {});
                                 $scope.adminFlag = true;
-                            
-                               
-                            }).then(function(response) {
+                                return $http.get('api/authenticate/user').then(function(response) {
 
                 // Stringify the returned data to prepare it
                 // to go into local storage
@@ -392,6 +386,12 @@
                  $state.go('analytics');
                  $scope.get_analytics_data();
             });
+
+                                // If login is successful, redirect to the users state
+                                //$state.go('users', {});
+                            
+                               
+                            });
 
 
                             // $scope.adminFlag = true;
