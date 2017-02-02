@@ -193,7 +193,8 @@
                     app.config(function($interpolateProvider,$stateProvider,$urlRouterProvider, $authProvider){
 
                        
-                        $authProvider.loginUrl = '/latitude/public/api/authenticate';
+                       // $authProvider.loginUrl = '/latitude/public/api/authenticate';
+                        $authProvider.loginUrl = '/api/authenticate';
 
                         $interpolateProvider.startSymbol('[[').endSymbol(']]');
 
