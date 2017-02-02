@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use DB;
+use Log;
+use AppHttpRequests;
+use AppHttpControllersController;
+//use JWTAuth;
+use Tymon\JWTAuthExceptions\JWTException;
+
+use Tymon\JWTAuth\Facades\JWTAuth;
+class AuthenticateController extends Controller
+{
+    //
+
+   public function __construct()
+   
+   {
+       // Apply the jwt.auth middleware to all methods in this controller
+       // except for the authenticate method. We don't want to prevent
+       // the user from retrieving their token if they don't already have it
+       $this->middleware('jwt.auth', ['except' => ['authenticate']]);
+   }
+
+     public function index()
+    {
+        // TODO: show users
+    }    
+
+
+  public function data(){
+
+
+	$results = DB::table('registration')->get();
+	
+	Log::info($results);
+
+	return $results;
+
+	}
+  
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->only('name', 'password');
+
+        try {
+            // verify the credentials and create a token for the user
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'invalid_credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            // something went wrong
+            return response()->json(['error' => 'could_not_create_token'], 500);
+        }
+
+        // if no errors are encountered we can return a JWT
+        return response()->json(compact('token'));
+    }
+}

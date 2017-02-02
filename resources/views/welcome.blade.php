@@ -16,6 +16,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.min.js"> </script>
         <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
          <script src="js/aws-sdk-js/dist/aws-sdk.min.js"></script>
+         <script src="node_modules/satellizer/dist/satellizer.js"></script>
+
 
         <!-- Styles -->
         <style>
@@ -146,7 +148,7 @@
                       <input type="password" class="form-control" id="pwd" ng-model="admin.password">
                     </div>
                   </div>
-                  <p> Note: Password is : latitude </p>
+                  
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="admin_submission()">Submit</button>
                   </div>
@@ -165,7 +167,7 @@
 
 
         <script>
-                            var app = angular.module('myApp', ['ui.router',]);
+                            var app = angular.module('myApp', ['ui.router','satellizer',]);
 
                             
 
@@ -188,8 +190,10 @@
 
 
 
-                    app.config(function($interpolateProvider,$stateProvider,$urlRouterProvider){
+                    app.config(function($interpolateProvider,$stateProvider,$urlRouterProvider, $authProvider){
 
+                       
+                        $authProvider.loginUrl = '/latitude/public/api/authenticate';
 
                         $interpolateProvider.startSymbol('[[').endSymbol(']]');
 
@@ -223,7 +227,7 @@
                 });    
 
 
-                app.controller('myCtrl', function($scope,$http,$state,myService) {
+                app.controller('myCtrl', function($scope,$http,$state,myService,$auth) {
 
 
                     $scope.loading = false;
@@ -335,21 +339,40 @@
 
                     $scope.admin_submission = function(){
 
-                        if($scope.admin.password == "latitude"){
+                        
 
                             console.log($scope.admin);
 
 
-                            $scope.adminFlag = true;
+                            var credentials = {
+                                name: $scope.admin.name,
+                                password: $scope.admin.password
+                            }
                             
-                            $state.go('analytics');
-                            $scope.get_analytics_data();
-                        }
+                            // Use Satellizer's $auth service to login
+                            $auth.login(credentials).then(function(data) {
 
-                        else{
+                                console.log(JSON.stringify(data.token));
+                                console.log(JSON.stringify(data));
+                              //  alert(data.token);
 
-                            alert("Invalid Credentials")
-                        }
+
+                                // If login is successful, redirect to the users state
+                                //$state.go('users', {});
+                                $scope.adminFlag = true;
+                            
+                                $state.go('analytics');
+                                $scope.get_analytics_data();
+                            });
+
+
+                            // $scope.adminFlag = true;
+                            
+                            // $state.go('analytics');
+                            // $scope.get_analytics_data();
+                        
+
+                        
 
                     }
 

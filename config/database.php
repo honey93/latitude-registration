@@ -12,7 +12,7 @@ $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
 
 //  $host = "localhost";
-// $username = "root";
+//      $username = "root";
 // $password = "";
 //  $database = "latitude-db";
 

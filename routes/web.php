@@ -26,13 +26,11 @@ Route::post('submit-form',function(Request $request){
 
 });
 
-Route::get('data-analytics',function(){
+Route::get('data-analytics', 'AuthenticateController@data');
 
-
-	$results = DB::table('registration')->get();
-	
-	Log::info($results);
-
-	return $results;
-
+Route::group(['prefix' => 'api'], function()
+{
+    Route::resource('authenticate', 'AuthenticateController', ['only' => ['welcome']]);
+    Route::post('authenticate', 'AuthenticateController@authenticate');
+    Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
 });
