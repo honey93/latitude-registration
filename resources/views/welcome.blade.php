@@ -100,7 +100,7 @@
                 <div class="col-md-2"> <div> <img src="logo.png" width="100%"> </div>  </div>
                 <div class="col-md-2 col-md-offset-8"> <button type="button" data-toggle="modal" data-target="#admin" class="btn btn-default admin" ng-show="!adminFlag">Admin Login</button>
 
-                <span ng-if="authenticated">Welcome, {{currentUser.name}}</span>
+                <span ng-show="authenticated">Welcome, [[currentUser.name]]</span>
                   <button type="button" class="btn btn-default admin" ng-show="adminFlag" ng-click="adminOut()">Logout</button></div>
             </div>
 
@@ -195,7 +195,8 @@
 
                     app.config(function($interpolateProvider,$stateProvider,$urlRouterProvider, $authProvider){
 
-                       
+                       // $scope.authenticated = false;
+                       // $scope.name = "";
                        // $authProvider.loginUrl = '/latitude/public/api/authenticate';
                         $authProvider.loginUrl = '/api/authenticate';
 
@@ -232,7 +233,6 @@
 
 
                 app.controller('myCtrl', function($scope,$http,$state,myService,$auth,$rootScope) {
-
 
                     $scope.loading = false;
 
@@ -383,6 +383,7 @@
                 // Putting the user's data on $rootScope allows
                 // us to access it anywhere across the app
                 $rootScope.currentUser = response.data.user;
+                $rootScope.name = $rootScope.currentUser.name;
 
                 // Everything worked out so we can now redirect to
                 // the users state to view the data
@@ -405,9 +406,25 @@
 
                     $scope.adminOut = function(){
 
+
+
+
                         $scope.adminFlag = false;
 
+                        $auth.logout().then(function() {
+
+                // Remove the authenticated user from local storage
+                localStorage.removeItem('user');
+
+                // Flip authenticated to false so that we no longer
+                // show UI elements dependant on the user being logged in
+                $rootScope.authenticated = false;
+
+                // Remove the current user info from rootscope
+                $rootScope.currentUser = null;
                         $state.go('home');
+            });
+
 
 
                     }
